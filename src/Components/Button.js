@@ -1,10 +1,14 @@
 import React from 'react'
 import {useState} from 'react';
+import Result from './Result';
 
 export default function Button() {
     const [inst, setInst]= useState(0);
-    const [mealName , setMealName] =useState();
-    const [mealImg , setMealImg] =useState();
+    const [mealName , setMealName] =useState("");
+    const [mealImg , setMealImg] =useState("");
+    const [data , setData] = useState();
+    const [btnTitle, setBtnTitle] = useState("Generate a random recipe")
+   
 
 
     const generate = async() => {
@@ -12,22 +16,19 @@ export default function Button() {
       let data = await fetch(url);
       let parcedD = await data.json();
       let parcedData = await parcedD.meals[0]
-      console.log(parcedData);
+
+      setData(parcedData);
       setInst(parcedData.strInstructions);
       setMealName(parcedData.strMeal);
       setMealImg(parcedData.strMealThumb);
+      setBtnTitle("Generate another random recipe")
     }
   return (
-    <div className='container'>
-        <h1 className='my-3'>BITE OF JOY</h1>
-        <button type="button" className="btn btn-primary btn-lg my-5" onClick={generate}>Generate Random Recipe</button>
-        <div className='container'>
-            <h3>{mealName}</h3>
-            <img src={mealImg} alt="mealimage"></img>
-            <p><b>Instruction: {inst} </b></p>
-            <h5>Ingredients:</h5>
-
-        </div>
+    <div>
+        
+        <button type="button" className="btn btn-dark my-3" onClick={generate}>{btnTitle}</button>
+        <Result inst= {inst} mealName={mealName} mealImg={mealImg} data={data} />
+      
     </div>
   )
 }
